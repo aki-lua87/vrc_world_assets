@@ -70,3 +70,15 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+ProjectSettings
+Packages
+Assets/Scenes
+Assets/UdonSharp
+Assets/XR
+Assets/SerializedUdonPrograms
+Assets/Examples and Samples Have Moved.txt
+Assets/Examples and Samples Have Moved.txt.meta
+Assets/Scenes.meta
+Assets/SerializedUdonPrograms.meta
+Assets/UdonSharp.meta
+Assets/XR.meta
