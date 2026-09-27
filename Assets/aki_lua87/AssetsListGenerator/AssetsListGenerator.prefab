@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -235,8 +235,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -309.7, y: 450.91}
-  m_SizeDelta: {x: 513.07, y: 146.97}
+  m_AnchoredPosition: {x: -12.8, y: 450.91}
+  m_SizeDelta: {x: 2368.9, y: 147}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7682409796950041816
 CanvasRenderer:
@@ -279,7 +279,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Asset List
+  m_Text: "\u5229\u7528\u30A2\u30BB\u30C3\u30C8\u4E00\u89A7"
 --- !u!1 &3844874482219703093
 GameObject:
   m_ObjectHideFlags: 0
@@ -335,7 +335,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: -5
+  m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -406,7 +406,28 @@ MonoBehaviour:
     type: 3}
   OneLinePrefab: {fileID: 4318452713410029149, guid: 15335b942f399144580539244253a6dc,
     type: 3}
-  targetContent: {fileID: 3844874482219703093}
+  CategoryPrefab: {fileID: 8416342491947937377, guid: 6cd3ae818e30fc74d926b7ee1d60518b,
+    type: 3}
+  targetScrollContent: {fileID: 3844874482219703093}
+  targetBackground: {fileID: 6361736558013875332}
+  enableUrlInput: 1
+  titleAuthorSeparator: ': '
+  categoryBackgroundColor: {r: 0.254717, g: 0.254717, b: 0.254717, a: 0.4392157}
+  categoryFontColor: {r: 1, g: 1, b: 1, a: 1}
+  categories:
+  - categoryName: CategorySample1
+    assets:
+    - assetTitle: "\u30B5\u30F3\u30D7\u30EB1"
+      assetAuthor: "\u30B5\u30F3\u30D7\u30EB1\u4F5C\u8005"
+      assetURL: http://example.com/sample1
+    - assetTitle: "\u30B5\u30F3\u30D7\u30EB2"
+      assetAuthor: "\u30B5\u30F3\u30D7\u30EB2\u4F5C\u8005"
+      assetURL: 
+  - categoryName: CategorySample2
+    assets:
+    - assetTitle: "\u30B5\u30F3\u30D7\u30EB3"
+      assetAuthor: 
+      assetURL: http://example.com/sample3
   AssetsData:
   - assetTitle: "\u30C6\u30B9\u30C8\u30A2\u30BB\u30C3\u30C81"
     assetAuthor: "\u30A2\u30BB\u30C3\u30C8\u4F5C\u8005\u30B5\u30F3\u30D7\u30EB1"
@@ -547,7 +568,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.18867922, g: 0.15396936, b: 0.15396936, a: 0.043137256}
+  m_EffectColor: {r: 0.18867922, g: 0.15396936, b: 0.15396936, a: 0}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 0
 --- !u!1 &7273690233673394201
@@ -792,3 +813,4 @@ MonoBehaviour:
   m_Script: {fileID: -1533785930, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AllowFocusView: 1
