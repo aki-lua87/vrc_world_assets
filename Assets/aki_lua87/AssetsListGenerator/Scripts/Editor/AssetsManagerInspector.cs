@@ -7,6 +7,8 @@ using UnityEditorInternal;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Reflection;
+using UdonSharp;
 using UdonSharpEditor;
 
 namespace aki_lua87.AssetsListGenerator
@@ -218,9 +220,25 @@ namespace aki_lua87.AssetsListGenerator
                 return;
             }
             var marquee = _target.GetComponent<TitleMarquee>();
-            if (marquee == null)
+            UdonSharpBehaviour optionalMarquee = null;
+            FieldInfo optionalTracks = null;
+            FieldInfo optionalDistances = null;
+            // Optional packages can provide their own Udon with these two public fields.
+            foreach (var component in _target.GetComponents<UdonSharpBehaviour>())
             {
-                Debug.LogError("TitleMarquee is missing from AssetsListGenerator. Assign it before generating the list.");
+                if (component == marquee) continue;
+                var tracksField = component.GetType().GetField("titleMarqueeTracks");
+                var distancesField = component.GetType().GetField("titleMarqueeDistances");
+                if (tracksField == null || tracksField.FieldType != typeof(RectTransform[]) ||
+                    distancesField == null || distancesField.FieldType != typeof(float[])) continue;
+                optionalMarquee = component;
+                optionalTracks = tracksField;
+                optionalDistances = distancesField;
+                break;
+            }
+            if (marquee == null && optionalMarquee == null)
+            {
+                Debug.LogError("A marquee Udon component is missing from AssetsListGenerator.");
                 return;
             }
 
@@ -229,11 +247,23 @@ namespace aki_lua87.AssetsListGenerator
             DestroyChildAll(_target.targetScrollContent.transform);
 
             await GenerateVerticalList();
-            if (_target == null || marquee == null) return;
-            marquee.titleMarqueeTracks = marqueeViewports.ToArray();
-            marquee.titleMarqueeDistances = marqueeDistances.ToArray();
-            EditorUtility.SetDirty(marquee);
-            UdonSharpEditorUtility.CopyProxyToUdon(marquee);
+            if (_target == null) return;
+            var tracks = marqueeViewports.ToArray();
+            var distances = marqueeDistances.ToArray();
+            if (marquee != null)
+            {
+                marquee.titleMarqueeTracks = tracks;
+                marquee.titleMarqueeDistances = distances;
+                EditorUtility.SetDirty(marquee);
+                UdonSharpEditorUtility.CopyProxyToUdon(marquee);
+            }
+            if (optionalMarquee != null)
+            {
+                optionalTracks.SetValue(optionalMarquee, tracks);
+                optionalDistances.SetValue(optionalMarquee, distances);
+                EditorUtility.SetDirty(optionalMarquee);
+                UdonSharpEditorUtility.CopyProxyToUdon(optionalMarquee);
+            }
         }
 
 
