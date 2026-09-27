@@ -7,6 +7,7 @@ using UnityEditorInternal;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
+using UdonSharpEditor;
 
 namespace aki_lua87.AssetsListGenerator
 {
@@ -19,6 +20,8 @@ namespace aki_lua87.AssetsListGenerator
 
         private const string PrefKeyGenerateQRCode = "aki_lua87.AssetsListGenerator.isGenerateQRCode";
         private bool isGenerateQRCode;
+        private readonly List<RectTransform> marqueeViewports = new List<RectTransform>();
+        private readonly List<float> marqueeDistances = new List<float>();
 
         private void OnEnable()
         {
@@ -214,10 +217,23 @@ namespace aki_lua87.AssetsListGenerator
                 Debug.LogError("Target Content is not assigned!");
                 return;
             }
+            var marquee = _target.GetComponent<TitleMarquee>();
+            if (marquee == null)
+            {
+                Debug.LogError("TitleMarquee is missing from AssetsListGenerator. Assign it before generating the list.");
+                return;
+            }
 
+            marqueeViewports.Clear();
+            marqueeDistances.Clear();
             DestroyChildAll(_target.targetScrollContent.transform);
 
             await GenerateVerticalList();
+            if (_target == null || marquee == null) return;
+            marquee.titleMarqueeTracks = marqueeViewports.ToArray();
+            marquee.titleMarqueeDistances = marqueeDistances.ToArray();
+            EditorUtility.SetDirty(marquee);
+            UdonSharpEditorUtility.CopyProxyToUdon(marquee);
         }
 
 
@@ -295,6 +311,8 @@ namespace aki_lua87.AssetsListGenerator
                 {
                     targetBgImage.color = _target.categoryBackgroundColor.a == 0f ?
                         Color.clear : _target.categoryBackgroundColor;
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(targetBgImage);
+                    EditorUtility.SetDirty(targetBgImage);
                 }
             }
             image.color = Color.clear;
@@ -327,6 +345,8 @@ namespace aki_lua87.AssetsListGenerator
             layout.padding = new RectOffset(10, 0, 0, 0);
             layout.childControlHeight = false;
             layout.childControlWidth = true;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(layout);
+            EditorUtility.SetDirty(layout);
         }
 
         private void ApplyColorSettings(GameObject obj)
@@ -346,6 +366,8 @@ namespace aki_lua87.AssetsListGenerator
                 {
                     targetBgImage.color = _target.categoryBackgroundColor.a == 0f ?
                         Color.clear : _target.categoryBackgroundColor;
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(targetBgImage);
+                    EditorUtility.SetDirty(targetBgImage);
                 }
             }
 
@@ -401,6 +423,7 @@ namespace aki_lua87.AssetsListGenerator
                 titleAndAuthorText.text = string.IsNullOrEmpty(assetData.author) ?
                     assetData.title :
                     assetData.title + _target.titleAuthorSeparator + assetData.author;
+                RegisterMarquee(titleAndAuthorText);
             }
 
             if (!string.IsNullOrEmpty(assetData.url))
@@ -430,6 +453,7 @@ namespace aki_lua87.AssetsListGenerator
             var titleText = CreateTextComponent(content, "Title", titleTextContent);
             titleText.transform.localPosition = new Vector3(0, size.y * 0.2f, 0);
             titleText.fontSize = Mathf.RoundToInt(size.y * 0.12f);
+            RegisterMarquee(titleText);
 
             // URL入力が有効かつURLが存在する場合のみURL欄を表示
             if (_target.enableUrlInput && !string.IsNullOrEmpty(assetData.url))
@@ -439,6 +463,15 @@ namespace aki_lua87.AssetsListGenerator
             }
 
             return content;
+        }
+
+        private void RegisterMarquee(Text titleText)
+        {
+            RectTransform track;
+            float distance;
+            if (!TitleMarqueeEditorUtility.Configure(titleText, out track, out distance)) return;
+            marqueeViewports.Add(track);
+            marqueeDistances.Add(distance);
         }
 
         private Text CreateTextComponent(GameObject parent, string name, string text)
