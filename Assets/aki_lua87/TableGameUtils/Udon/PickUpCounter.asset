@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: PickUpCounter
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: cf30ee60b13a1564b8df0dc24fe4d846,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: b44f5057246068543966e92941936938,
     type: 2}
   udonAssembly: 
   assemblyError: 
